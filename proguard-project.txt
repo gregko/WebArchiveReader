@@ -18,3 +18,10 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# Needed for Rhino...
+-dontwarn org.mozilla.javascript.**
+-dontwarn org.mozilla.classfile.**
+
+# Also http://vec.io/tags/javascript says he had to delete org.mozilla.javascript.tools package from js.jar
+# to make Proguard work

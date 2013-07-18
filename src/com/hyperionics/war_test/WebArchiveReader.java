@@ -6,6 +6,7 @@ package com.hyperionics.war_test;
  */
 import android.util.Base64;
 import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import org.w3c.dom.*;
@@ -85,12 +86,44 @@ public abstract class WebArchiveReader {
     public boolean loadToWebView(WebView v) {
         myWebView = v;
         v.setWebViewClient(new WebClient());
+        WebSettings webSettings = v.getSettings();
+        webSettings.setDefaultTextEncodingName("UTF-8");
+
         myLoadingArchive = true;
         try {
             // Find the first ArchiveResource in myDoc, should be <ArchiveResource>
             Element ar = (Element) myDoc.getDocumentElement().getFirstChild().getFirstChild();
             byte b[] = getElBytes(ar, "data");
-            String topHtml = new String(b);
+
+            // Find out the web page charset encoding
+            String charset = null;
+            // Taking arbitrary first 2k of html text to search for charset. Is this enough?
+            // Or be safe and slow, take all of the byte array for this search?
+            String topHtml = new String(b, 0, b.length > 2048 ? 2048 : b.length).toLowerCase();
+            int n1 = topHtml.indexOf("<meta http-equiv=\"content-type\"");
+            if (n1 > -1) {
+                int n2 = topHtml.indexOf('>', n1);
+                if (n2 > -1) {
+                    topHtml = topHtml.substring(n1, n2);
+                    n1 = topHtml.indexOf("charset");
+                    if (n1 > -1) {
+                        topHtml = topHtml.substring(n1);
+                        n1 = topHtml.indexOf('=');
+                        if (n1 > -1) {
+                            topHtml = topHtml.substring(n1+1);
+                            topHtml = topHtml.trim();
+                            n1 = topHtml.indexOf('\"');
+                            if (n1 < 0)
+                                n1 = topHtml.indexOf('\'');
+                            if (n1 > -1) {
+                                charset = topHtml.substring(0, n1).trim();
+                            }
+                        }
+                    }
+                }
+            }
+
+            topHtml = new String(b, charset);
             String baseUrl = new String(getElBytes(ar, "url"));
             v.loadDataWithBaseURL(baseUrl, topHtml, "text/html", "UTF-8", null);
         } catch (Exception e) {

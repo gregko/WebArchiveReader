@@ -41,8 +41,9 @@ public class MyActivity extends Activity {
         webView.setWebViewClient(new MyWebClient());
         webView.getSettings().setJavaScriptEnabled(true);
 
+
         //webView.loadUrl("http://www.sme.sk/");
-        //webView.loadUrl("http://www.hyperionics.com");
+        //webView.loadUrl("http://e-pao.org/");
         //webView.loadUrl("http://www.androidauthority.com/who-will-be-the-next-samsung-147873/");
         //webView.loadUrl("http://www.chicagotribune.com/news/local/breaking/chi-chief-keef-jailed-20130115,0,6580088.story");
         //webView.loadUrl("https://twitter.com/kennykerr/status/290981527293132800");
@@ -55,8 +56,9 @@ public class MyActivity extends Activity {
         });
 
         try {
+            InputStream is = getAssets().open("TestHtmlArchive.xml");
             //InputStream is = getAssets().open("1373985294472.xml");
-            FileInputStream is = new FileInputStream("/sdcard/Hyperionics/SavedArchive.xml");
+            //FileInputStream is = new FileInputStream("/sdcard/Hyperionics/SavedArchive.xml");
             WebArchiveReader wr = new WebArchiveReader() {
                 void onFinished(WebView v) {
                     // we are notified here when the page is fully loaded.

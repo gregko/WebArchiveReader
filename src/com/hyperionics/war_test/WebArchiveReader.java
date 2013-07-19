@@ -99,31 +99,32 @@ public abstract class WebArchiveReader {
             String charset = null;
             // Taking arbitrary first 2k of html text to search for charset. Is this enough?
             // Or be safe and slow, take all of the byte array for this search?
-            String topHtml = new String(b, 0, b.length > 2048 ? 2048 : b.length).toLowerCase();
+            String topHtml = new String(b).toLowerCase();
             int n1 = topHtml.indexOf("<meta http-equiv=\"content-type\"");
             if (n1 > -1) {
                 int n2 = topHtml.indexOf('>', n1);
                 if (n2 > -1) {
-                    topHtml = topHtml.substring(n1, n2);
-                    n1 = topHtml.indexOf("charset");
+                    String tag = topHtml.substring(n1, n2);
+                    n1 = tag.indexOf("charset");
                     if (n1 > -1) {
-                        topHtml = topHtml.substring(n1);
-                        n1 = topHtml.indexOf('=');
+                        tag = tag.substring(n1);
+                        n1 = tag.indexOf('=');
                         if (n1 > -1) {
-                            topHtml = topHtml.substring(n1+1);
-                            topHtml = topHtml.trim();
-                            n1 = topHtml.indexOf('\"');
+                            tag = tag.substring(n1+1);
+                            tag = tag.trim();
+                            n1 = tag.indexOf('\"');
                             if (n1 < 0)
-                                n1 = topHtml.indexOf('\'');
+                                n1 = tag.indexOf('\'');
                             if (n1 > -1) {
-                                charset = topHtml.substring(0, n1).trim();
+                                charset = tag.substring(0, n1).trim();
                             }
                         }
                     }
                 }
             }
 
-            topHtml = new String(b, charset);
+            if (charset != null)
+                topHtml = new String(b, charset);
             String baseUrl = new String(getElBytes(ar, "url"));
             v.loadDataWithBaseURL(baseUrl, topHtml, "text/html", "UTF-8", null);
         } catch (Exception e) {

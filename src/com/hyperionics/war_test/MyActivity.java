@@ -42,7 +42,7 @@ public class MyActivity extends Activity {
         webView.getSettings().setJavaScriptEnabled(true);
 
 
-        //webView.loadUrl("http://www.sme.sk/");
+        //webView.loadUrl("http://aajkaal.net");
         //webView.loadUrl("http://e-pao.org/");
         //webView.loadUrl("http://www.androidauthority.com/who-will-be-the-next-samsung-147873/");
         //webView.loadUrl("http://www.chicagotribune.com/news/local/breaking/chi-chief-keef-jailed-20130115,0,6580088.story");

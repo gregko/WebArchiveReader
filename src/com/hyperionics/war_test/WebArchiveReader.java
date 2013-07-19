@@ -9,12 +9,15 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import com.ibm.icu.text.CharsetDetector;
+import com.ibm.icu.text.CharsetMatch;
 import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public abstract class WebArchiveReader {
@@ -123,6 +126,15 @@ public abstract class WebArchiveReader {
 
             if (charset != null)
                 topHtml = new String(b, charset);
+            else {
+                CharsetMatch match = new CharsetDetector().setText(b).detect();
+                if (match != null) try {
+                    Lt.d("Guessed enc: " + match.getName() + " conf: " + match.getConfidence());
+                    topHtml = new String(b, match.getName());
+                } catch (UnsupportedEncodingException ue) {
+                    topHtml = new String(b);
+                }
+            }
             String baseUrl = new String(getElBytes(ar, "url"));
             v.loadDataWithBaseURL(baseUrl, topHtml, "text/html", "UTF-8", null);
         } catch (Exception e) {

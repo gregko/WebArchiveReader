@@ -97,8 +97,6 @@ public abstract class WebArchiveReader {
 
             // Find out the web page charset encoding
             String charset = null;
-            // Taking arbitrary first 2k of html text to search for charset. Is this enough?
-            // Or be safe and slow, take all of the byte array for this search?
             String topHtml = new String(b).toLowerCase();
             int n1 = topHtml.indexOf("<meta http-equiv=\"content-type\"");
             if (n1 > -1) {

@@ -1,12 +1,12 @@
-This project contains Android WebArchiveReader class - to read web page archive saved with WebView class
-saveWebArchive() method. A web archive file is actually an XML file with the contents of the page
-encoded in Base64 format, and also contains all sub-frames and objects embedded into a page, such as 
-images etc. Please note that despite the Android docs declaring that shouldInterceptRequest() was
-added to WebViewClient in API11 (Honeycomb), this code works and was tested successfully in Android
-emulators down to API8 (Froyo).
+This project contains Android WebArchiveReader class - to read web page archive saved with WebView class saveWebArchive() method. A web archive file is actually an XML file with the contents of the page encoded in Base64 format, and also contains all sub-frames and objects embedded into a page, such as images etc. Please note that despite the Android docs declaring that shouldInterceptRequest() was added to WebViewClient in API11 (Honeycomb), this code works and was tested successfully in Android emulators down to API8 (Froyo).
 
-WebArchiveReader.java is the actual reader class.
-MyActivity.java is a sample activity illustrating how you could use the reader.
+WebArchiveReader.java is the actual reader class. MyActivity.java is a sample activity illustrating how you could use the reader.
+
+NOTE: The saveWebArchive() method of WebKit under Android 4.4 "KitKat" (and probably newer versions too) does not save the web archive in XML code that this reader understands. Instead it saves pages in MHT (MHTML) format, which this code does not understand. It is easy however to read back the .mht files - just use:
+
+    webView.loadUrl("file:///my_dir/mySavedWebPage.mht");
+    
+That's all, much easier than the previous method, and compatible with other platforms.
 
 Hope this is helpful, enjoy!
 
